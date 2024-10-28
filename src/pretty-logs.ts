@@ -9,6 +9,7 @@ export class PrettyLogs {
     this.fatal = this.fatal.bind(this);
     this.debug = this.debug.bind(this);
     this.verbose = this.verbose.bind(this);
+    this.trace = this.trace.bind(this);
   }
   public fatal(message: string, metadata?: Metadata | string | unknown) {
     this._logWithStack(LOG_LEVEL.FATAL, message, metadata);
@@ -32,6 +33,10 @@ export class PrettyLogs {
 
   public verbose(message: string, metadata?: Metadata | string) {
     this._logWithStack(LOG_LEVEL.VERBOSE, message, metadata);
+  }
+  
+  public trace(message: string, metadata?: Metadata | string) {
+    this._logWithStack(LOG_LEVEL.TRACE, message, metadata);
   }
 
   private _logWithStack(type: LogLevelWithOk, message: string, metaData?: Metadata | string | unknown) {
@@ -103,6 +108,7 @@ export class PrettyLogs {
       info: "›",
       debug: "››",
       verbose: "💬",
+      trace: "🔍",
     };
 
     const symbol = defaultSymbols[type];
@@ -128,6 +134,7 @@ export class PrettyLogs {
       info: ["info", COLORS.dim],
       debug: ["debug", COLORS.fgMagenta],
       verbose: ["debug", COLORS.dim],
+      trace: ["trace", COLORS.fgBlue],
     };
 
     const _console = console[colorMap[type][0] as keyof typeof console] as (...args: string[]) => void;
