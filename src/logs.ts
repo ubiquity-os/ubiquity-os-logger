@@ -12,7 +12,6 @@ export class Logs {
       consoleLog(logMessage, metadata);
     }
 
-    // Ensure metadata is set correctly in LogReturn
     return new LogReturn(
       {
         raw: logMessage,
@@ -20,7 +19,7 @@ export class Logs {
         type,
         level,
       },
-      metadata // Ensure metadata is passed correctly here
+      metadata
     );
   }
 
@@ -126,6 +125,17 @@ export class Logs {
       type: "verbose",
     });
   }
+  
+  public trace(log: string, metadata?: Metadata): LogReturn {
+  metadata = this._addDiagnosticInformation(metadata);
+  return this._log({
+    level: LOG_LEVEL.TRACE,
+    consoleLog: Logs.console.trace,
+    logMessage: log,
+    metadata,
+    type: "trace",
+  });
+  }
 
   constructor(logLevel: LogLevel) {
     this._maxLevel = this._getNumericLevel(logLevel);
@@ -169,22 +179,23 @@ export class Logs {
   }
 
   private _getNumericLevel(level: LogLevel) {
-    switch (level) {
-      case LOG_LEVEL.FATAL:
-        return 0;
-      case LOG_LEVEL.ERROR:
-        return 1;
-      case LOG_LEVEL.INFO:
-        return 2;
-      case LOG_LEVEL.VERBOSE:
-        return 4;
-      case LOG_LEVEL.DEBUG:
-        return 5;
-      default:
-        return -1;
-    }
+  switch (level) {
+    case LOG_LEVEL.FATAL:
+      return 0;
+    case LOG_LEVEL.ERROR:
+      return 1;
+    case LOG_LEVEL.INFO:
+      return 2;
+    case LOG_LEVEL.VERBOSE:
+      return 4;
+    case LOG_LEVEL.DEBUG:
+      return 5;
+    case LOG_LEVEL.TRACE: // New log level
+      return 6; // Assign a higher numeric value
+    default:
+      return -1;
   }
-  
+}
   static convertErrorsIntoObjects(obj: unknown): Metadata | unknown {
     // this is a utility function to render native errors in the console, the database, and on GitHub.
     if (obj instanceof Error) {
@@ -199,7 +210,6 @@ export class Logs {
         obj[key] = this.convertErrorsIntoObjects(obj[key]);
       });
     }
-    
-   return obj;
+    return obj;
   }
 }
