@@ -125,17 +125,6 @@ export class Logs {
       type: "verbose",
     });
   }
-  
-  public trace(log: string, metadata?: Metadata): LogReturn {
-  metadata = this._addDiagnosticInformation(metadata);
-  return this._log({
-    level: LOG_LEVEL.TRACE,
-    consoleLog: Logs.console.trace,
-    logMessage: log,
-    metadata,
-    type: "trace",
-  });
-  }
 
   constructor(logLevel: LogLevel) {
     this._maxLevel = this._getNumericLevel(logLevel);
