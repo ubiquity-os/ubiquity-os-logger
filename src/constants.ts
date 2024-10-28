@@ -32,5 +32,4 @@ export const LOG_LEVEL = {
   INFO: 'info',
   VERBOSE: 'verbose',
   DEBUG: 'debug',
-  TRACE: 'trace', // New log level
 } as const;
