@@ -133,7 +133,7 @@ export class PrettyLogs {
       error: ["warn", COLORS.fgYellow],
       info: ["info", COLORS.dim],
       debug: ["debug", COLORS.fgMagenta],
-      verbose: ["debug", COLORS.dim],
+      verbose: ["verbose", COLORS.dim],
       trace: ["trace", COLORS.fgBlue],
     };
 
