@@ -12,6 +12,7 @@ export class Logs {
       consoleLog(logMessage, metadata);
     }
 
+    // Ensure metadata is set correctly in LogReturn
     return new LogReturn(
       {
         raw: logMessage,
@@ -19,7 +20,7 @@ export class Logs {
         type,
         level,
       },
-      metadata
+      metadata // Ensure metadata is passed correctly here
     );
   }
 
@@ -183,6 +184,7 @@ export class Logs {
         return -1;
     }
   }
+  
   static convertErrorsIntoObjects(obj: unknown): Metadata | unknown {
     // this is a utility function to render native errors in the console, the database, and on GitHub.
     if (obj instanceof Error) {
@@ -197,6 +199,7 @@ export class Logs {
         obj[key] = this.convertErrorsIntoObjects(obj[key]);
       });
     }
-    return obj;
+    
+   return obj;
   }
 }
