@@ -68,7 +68,7 @@ export class Logs {
     });
   }
 
-  public warning(log: string, metadata?: Metadata): LogReturn {
+  public warn(log: string, metadata?: Metadata): LogReturn {
     metadata = this._addDiagnosticInformation(metadata);
     return this._log({
       level: LOG_LEVEL.WARN,
