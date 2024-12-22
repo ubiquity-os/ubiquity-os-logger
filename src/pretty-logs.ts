@@ -7,6 +7,7 @@ export class PrettyLogs {
     this.info = this.info.bind(this);
     this.error = this.error.bind(this);
     this.fatal = this.fatal.bind(this);
+    this.warn = this.warn.bind(this);
     this.debug = this.debug.bind(this);
     this.verbose = this.verbose.bind(this);
   }

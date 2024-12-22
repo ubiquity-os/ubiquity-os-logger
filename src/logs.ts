@@ -149,7 +149,7 @@ export class Logs {
       warn: "> [!WARNING]",
       ok: "> [!NOTE]",
       info: "> [!NOTE]",
-      debug: "> [!NOTE]",
+      debug: "> [!IMPORTANT]",
       verbose: "> [!NOTE]",
     };
     const selected = diffPrefix[type];
