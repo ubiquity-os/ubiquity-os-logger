@@ -147,7 +147,7 @@ export class Logs {
       fatal: "> [!CAUTION]",
       error: "> [!CAUTION]",
       warn: "> [!WARNING]",
-      ok: "> [!NOTE]",
+      ok: "> [!TIP]",
       info: "> [!NOTE]",
       debug: "> [!IMPORTANT]",
       verbose: "> [!NOTE]",
