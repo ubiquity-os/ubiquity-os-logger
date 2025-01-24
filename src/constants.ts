@@ -29,6 +29,7 @@ export const COLORS = {
 export const LOG_LEVEL = {
   FATAL: "fatal",
   ERROR: "error",
+  WARN: "warn",
   INFO: "info",
   VERBOSE: "verbose",
   DEBUG: "debug",
