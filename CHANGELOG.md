@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.0](https://github.com/ubiquity-os/ubiquity-os-logger/compare/v1.3.2...v1.4.0) (2025-01-25)
+
+
+### Features
+
+* change debug to IMPORTANT ([fa92078](https://github.com/ubiquity-os/ubiquity-os-logger/commit/fa92078edc7fc99a11c187306c1322d4052c7043))
+* change to TIP ([9c9479a](https://github.com/ubiquity-os/ubiquity-os-logger/commit/9c9479ad80a2ead7d13d91e2d375e430ba5f0b9b))
+* comment style and add warning ([75a6160](https://github.com/ubiquity-os/ubiquity-os-logger/commit/75a6160c1dab0b1bb21c94974cb2a0b92323c3d1))
+
+
+### Bug Fixes
+
+* name ([2d1f3a9](https://github.com/ubiquity-os/ubiquity-os-logger/commit/2d1f3a9c3e0b5ba38299279e4ada6baaa693580a))
+
 ## [1.3.2](https://github.com/ubiquity-os/ubiquity-os-logger/compare/v1.3.1...v1.3.2) (2024-10-10)
 
 
