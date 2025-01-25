@@ -1,6 +1,6 @@
 import { LOG_LEVEL } from "./constants";
 import { PrettyLogs } from "./pretty-logs";
-import { LogParams, LogReturn, Metadata, LogLevel } from "./types/log-types";
+import { LogParams, LogReturn, Metadata, LogLevel, LogLevelWithOk } from "./types/log-types";
 
 export class Logs {
   private _maxLevel = -1;
@@ -68,6 +68,17 @@ export class Logs {
     });
   }
 
+  public warn(log: string, metadata?: Metadata): LogReturn {
+    metadata = this._addDiagnosticInformation(metadata);
+    return this._log({
+      level: LOG_LEVEL.WARN,
+      consoleLog: Logs.console.warn,
+      logMessage: log,
+      metadata,
+      type: "warn",
+    });
+  }
+
   public error(log: string, metadata?: Metadata): LogReturn {
     metadata = this._addDiagnosticInformation(metadata);
     return this._log({
@@ -131,40 +142,27 @@ export class Logs {
     Logs.console = new PrettyLogs();
   }
 
-  private _diffColorCommentMessage(type: string, message: string) {
-    const diffPrefix = {
-      fatal: "-", // - text in red
-      ok: "+", // + text in green
-      error: "!", // ! text in orange
-      info: "#", // # text in gray
-      debug: "@@@@", // @@ text in purple (and bold)@@
+  private _diffColorCommentMessage(type: LogLevelWithOk, message: string) {
+    const diffPrefix: Record<LogLevelWithOk, string> = {
+      fatal: "> [!CAUTION]",
+      error: "> [!CAUTION]",
+      warn: "> [!WARNING]",
+      ok: "> [!TIP]",
+      info: "> [!NOTE]",
+      debug: "> [!IMPORTANT]",
+      verbose: "> [!NOTE]",
     };
-    const selected = diffPrefix[type as keyof typeof diffPrefix];
+    const selected = diffPrefix[type];
 
     if (selected) {
       message = message
         .trim()
         .split("\n")
-        .map((line) => `${selected} ${line}`)
-        .join("\n");
-    } else if (type === "debug") {
-      // debug has special formatting
-      message = message
-        .split("\n")
-        .map((line) => `@@ ${line} @@`)
-        .join("\n"); // debug: "@@@@",
-    } else {
-      // default to gray
-      message = message
-        .split("\n")
-        .map((line) => `# ${line}`)
+        .map((line) => `> ${line}`)
         .join("\n");
     }
 
-    const diffHeader = "```diff";
-    const diffFooter = "```";
-
-    return [diffHeader, message, diffFooter].join("\n");
+    return [selected, message].join("\n");
   }
 
   private _getNumericLevel(level: LogLevel) {
@@ -173,8 +171,10 @@ export class Logs {
         return 0;
       case LOG_LEVEL.ERROR:
         return 1;
-      case LOG_LEVEL.INFO:
+      case LOG_LEVEL.WARN:
         return 2;
+      case LOG_LEVEL.INFO:
+        return 3;
       case LOG_LEVEL.VERBOSE:
         return 4;
       case LOG_LEVEL.DEBUG:

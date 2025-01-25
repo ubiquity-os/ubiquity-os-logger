@@ -7,6 +7,7 @@ export class PrettyLogs {
     this.info = this.info.bind(this);
     this.error = this.error.bind(this);
     this.fatal = this.fatal.bind(this);
+    this.warn = this.warn.bind(this);
     this.debug = this.debug.bind(this);
     this.verbose = this.verbose.bind(this);
   }
@@ -16,6 +17,10 @@ export class PrettyLogs {
 
   public error(message: string, metadata?: Metadata | string) {
     this._logWithStack(LOG_LEVEL.ERROR, message, metadata);
+  }
+
+  public warn(message: string, metadata?: Metadata | string) {
+    this._logWithStack(LOG_LEVEL.WARN, message, metadata);
   }
 
   public ok(message: string, metadata?: Metadata | string) {
@@ -99,6 +104,7 @@ export class PrettyLogs {
     const defaultSymbols: Record<LogLevelWithOk, string> = {
       fatal: "×",
       ok: "✓",
+      warn: "⚠",
       error: "⚠",
       info: "›",
       debug: "››",
@@ -124,6 +130,7 @@ export class PrettyLogs {
     const colorMap: Record<LogLevelWithOk, [keyof typeof console, Colors]> = {
       fatal: ["error", COLORS.fgRed],
       ok: ["log", COLORS.fgGreen],
+      warn: ["warn", COLORS.fgYellow],
       error: ["warn", COLORS.fgYellow],
       info: ["info", COLORS.dim],
       debug: ["debug", COLORS.fgMagenta],
