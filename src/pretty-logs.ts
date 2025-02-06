@@ -40,43 +40,38 @@ export class PrettyLogs {
   }
 
   private _logWithStack(type: LogLevelWithOk, message: string, metaData?: Metadata | string | unknown) {
-    this._log(type, message);
+    let stack = "";
+    let metadataFormatted = "";
+
     if (typeof metaData === "string") {
-      this._log(type, metaData);
-      return;
-    }
-    if (metaData) {
+      metadataFormatted = `\n${metaData}`;
+    } else if (metaData) {
       const metadata = metaData as Metadata;
-      let stack = metadata?.error?.stack || metadata?.stack;
-      if (!stack) {
-        // generate and remove the top four lines of the stack trace
+      stack = (metadata?.error?.stack || metadata?.stack || "") as string;
+
+      if (!stack || typeof stack !== "string") {
         const stackTrace = new Error().stack?.split("\n");
         if (stackTrace) {
           stackTrace.splice(0, 4);
           stack = stackTrace.filter((line) => line.includes(".ts:")).join("\n");
+        } else {
+          stack = "";
         }
       }
+
       const newMetadata = { ...metadata };
       delete newMetadata.message;
       delete newMetadata.name;
       delete newMetadata.stack;
 
       if (!this._isEmpty(newMetadata)) {
-        this._log(type, newMetadata);
-      }
-
-      if (typeof stack == "string") {
-        const prettyStack = this._formatStackTrace(stack, 1);
-        const colorizedStack = this._colorizeText(prettyStack, COLORS.dim);
-        this._log(type, colorizedStack);
-      } else if (stack) {
-        const prettyStack = this._formatStackTrace((stack as unknown as string[]).join("\n"), 1);
-        const colorizedStack = this._colorizeText(prettyStack, COLORS.dim);
-        this._log(type, colorizedStack);
-      } else {
-        throw new Error("Stack is null");
+        metadataFormatted = `\n${JSON.stringify(newMetadata, null, 2)}`;
       }
     }
+
+    const finalLogMessage = [message, metadataFormatted, stack ? `\n${stack}` : ""].filter(Boolean).join("\n").trim();
+
+    this._log(type, finalLogMessage);
   }
 
   private _colorizeText(text: string, color: Colors): string {

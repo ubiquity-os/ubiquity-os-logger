@@ -16,6 +16,10 @@ describe("PrettyLogs", () => {
     const logSpy = jest.spyOn(console, "log").mockImplementation();
     const logReturn = logs.ok("This is an OK message");
     expect(logReturn).toBeUndefined();
+
+    // // Debugging: print what was captured
+    // console.log("Captured Logs:", logSpy.mock.calls);
+
     const cleanLogStrings = cleanSpyLogs(logSpy);
     expect(cleanLogStrings).toContain(cleanLogString("✓ This is an OK message"));
   });
@@ -65,10 +69,20 @@ describe("PrettyLogs", () => {
     const logReturn = logs.debug("This is a METADATA message", { thisIsMetadata: true, stuff: Array(5).fill("stuff"), moreStuff: { a: "a", b: "b" } });
     expect(logReturn).toBeUndefined();
     const cleanLogStrings = cleanSpyLogs(logSpy);
-    expect(cleanLogStrings).toEqual([
-      cleanLogString(" ›› This is a METADATA message"),
-      cleanLogString(` ›› ${JSON.stringify({ thisIsMetadata: true, stuff: ["stuff", "stuff", "stuff", "stuff", "stuff"], moreStuff: { a: "a", b: "b" } })}`),
-    ]);
+    expect(cleanLogStrings).toHaveLength(1);
+    const expectedMultilineLog = cleanLogString(
+      ` ›› This is a METADATA message
+      ${JSON.stringify(
+        {
+          thisIsMetadata: true,
+          stuff: ["stuff", "stuff", "stuff", "stuff", "stuff"],
+          moreStuff: { a: "a", b: "b" },
+        },
+        null,
+        2
+      )}`
+    );
+    expect(cleanLogStrings[0]).toEqual(expectedMultilineLog);
   });
 
   it("should log metadata as a string", () => {
@@ -76,7 +90,13 @@ describe("PrettyLogs", () => {
     const logReturn = logs.debug("This is a METADATA message", "This is metadata as a string");
     expect(logReturn).toBeUndefined();
     const cleanLogStrings = cleanSpyLogs(logSpy);
-    expect(cleanLogStrings).toEqual([cleanLogString(" ›› This is a METADATA message"), cleanLogString(" ›› This is metadata as a string")]);
+    expect(cleanLogStrings).toHaveLength(1);
+    const expectedMultilineLog = cleanLogString(
+      ` ›› This is a METADATA message
+      This is metadata as a string`
+    );
+
+    expect(cleanLogStrings[0]).toEqual(expectedMultilineLog);
   });
 
   it("should log an error and stack", () => {
@@ -84,13 +104,13 @@ describe("PrettyLogs", () => {
     const logReturn = logs.debug("This is a METADATA message", { error: tryError() });
     expect(logReturn).toBeUndefined();
     const cleanLogStrings = cleanSpyLogs(logSpy);
+    expect(cleanLogStrings).toHaveLength(1);
+    const [singleLogEntry] = cleanLogStrings;
+    expect(singleLogEntry).toContain("ThisisaMETADATAmessage");
+    expect(singleLogEntry).toContain(`"error":{}`);
 
-    const errorRegex = /↳tryError\(.+\)↳Object.<anonymous>\(/;
+    const errorRegex = /tryError\(.*?\)atObject\.<anonymous>\(/;
 
-    expect(cleanLogStrings).toEqual([
-      cleanLogString(" ›› This is a METADATA message"),
-      cleanLogString(` ›› ${JSON.stringify({ error: {} })}`),
-      expect.stringMatching(errorRegex),
-    ]);
+    expect(singleLogEntry).toMatch(errorRegex);
   });
 });
