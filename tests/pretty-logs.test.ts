@@ -16,10 +16,6 @@ describe("PrettyLogs", () => {
     const logSpy = jest.spyOn(console, "log").mockImplementation();
     const logReturn = logs.ok("This is an OK message");
     expect(logReturn).toBeUndefined();
-
-    // // Debugging: print what was captured
-    // console.log("Captured Logs:", logSpy.mock.calls);
-
     const cleanLogStrings = cleanSpyLogs(logSpy);
     expect(cleanLogStrings).toContain(cleanLogString("✓ This is an OK message"));
   });
