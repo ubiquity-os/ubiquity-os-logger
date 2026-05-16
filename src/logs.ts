@@ -145,7 +145,7 @@ export class Logs {
   private _diffColorCommentMessage(type: LogLevelWithOk, message: string) {
     const diffPrefix: Record<LogLevelWithOk, string> = {
       fatal: "> [!CAUTION]",
-      error: "> [!CAUTION]",
+      error: "> [!WARNING]",
       warn: "> [!WARNING]",
       ok: "> [!TIP]",
       info: "> [!NOTE]",
